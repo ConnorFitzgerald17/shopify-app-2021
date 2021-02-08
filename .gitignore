@@ -1,0 +1,8 @@
+.env
+.DS_Store
+assets/
+node_modules/
+dump.rdb
+main.js
+db.sqlite3
+.next/
