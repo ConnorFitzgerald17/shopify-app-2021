@@ -37,11 +37,9 @@ export default function InputForm(props) {
 
   const Preview = () => {
     const { value } = data;
-
     const optionList = [];
-
     const options = value.split("\n");
-    console.log(options);
+
     for (let i = 0; i < options.length; i++) {
       if (options[i] !== "") {
         optionList.push({
