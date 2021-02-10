@@ -10,7 +10,7 @@ class MyApp extends App {
   render() {
     const { Component, pageProps, shopOrigin } = this.props;
     return (
-      <AppProvider>
+      <AppProvider i18n={translations}>
         <Provider
           config={{
             apiKey: API_KEY,

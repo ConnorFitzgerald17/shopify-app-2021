@@ -5,7 +5,7 @@ import {
   TextStyle,
   ResourceList,
   TextContainer,
-  Badge,
+  ResourceItem,
   Heading,
   Button,
   Stack,
@@ -131,10 +131,14 @@ class Index extends React.Component {
       const redirect = Redirect.create(app);
       redirect.dispatch(Redirect.Action.APP, "/edit-product");
     };
+    const resourceName = {
+      singular: "product",
+      plural: "products",
+    };
 
     const promotedBulkActions = [
       {
-        content: "Remove Product",
+        content: "Remove Product(s)",
         onAction: this.removeProduct,
       },
     ];
@@ -148,10 +152,7 @@ class Index extends React.Component {
         }}
         image="https://cdn.shopify.com/s/files/1/2376/3301/products/emptystate-files.png"
       >
-        <p>
-          You can use the Files section to upload images, videos, and other
-          documents
-        </p>
+        <p>To begin please select a product to start editing.</p>
       </EmptyState>
     ) : undefined;
     return (
@@ -171,16 +172,16 @@ class Index extends React.Component {
           onCancel={() => this.setState({ open: false })}
           actionVerb={"select"}
         ></ResourcePicker>
-        <Card title="Online store dashboard" sectioned>
+        <Card>
           <ResourceList
+            resourceName={resourceName}
             emptyState={emptyStateMarkup}
             loading={this.state.isLoading}
-            showHeader
             selectedItems={this.state.selectedItems}
             onSelectionChange={(products) =>
               this.handleProductListSelection(products)
             }
-            selectable
+            showHeader
             items={this.state.listOfProducts}
             promotedBulkActions={promotedBulkActions}
             renderItem={(item) => {
@@ -195,7 +196,7 @@ class Index extends React.Component {
               }
 
               return (
-                <ResourceList.Item id={id} media={placeholder}>
+                <ResourceItem id={id} media={placeholder}>
                   <Stack distribution="equalSpacing">
                     <Stack.Item>
                       <TextContainer spacing="loose">
@@ -222,10 +223,10 @@ class Index extends React.Component {
                       </Button>
                     </Stack.Item>
                   </Stack>
-                </ResourceList.Item>
+                </ResourceItem>
               );
             }}
-          ></ResourceList>
+          />
         </Card>
       </Page>
     );
