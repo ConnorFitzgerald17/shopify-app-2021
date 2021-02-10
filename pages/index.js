@@ -9,7 +9,9 @@ import {
   Heading,
   Button,
   Stack,
+  Thumbnail,
 } from "@shopify/polaris";
+import { EditMajor } from "@shopify/polaris-icons";
 import { ResourcePicker, Context } from "@shopify/app-bridge-react";
 import { parseGid, composeGid } from "@shopify/admin-graphql-api-utilities";
 import { Redirect } from "@shopify/app-bridge/actions";
@@ -183,17 +185,26 @@ class Index extends React.Component {
             promotedBulkActions={promotedBulkActions}
             renderItem={(item) => {
               const { id, title, tags, images } = item;
+              let placeholder;
+              if (images.length) {
+                placeholder = <Thumbnail source={images[0].src} />;
+              } else {
+                placeholder = (
+                  <Thumbnail source="https://burst.shopifycdn.com/photos/green-orange-and-yellow-ink.jpg" />
+                );
+              }
+
               return (
-                <ResourceList.Item id={id}>
+                <ResourceList.Item id={id} media={placeholder}>
                   <Stack distribution="equalSpacing">
                     <Stack.Item>
                       <TextContainer spacing="loose">
                         <Heading>
                           <TextStyle variation="strong">{title}</TextStyle>
                         </Heading>
-                        <Badge size="small" status="info">
-                          Tags: {tags ? tags : "No Tags"}
-                        </Badge>
+                        <TextContainer>
+                          <TextStyle>Tags: {tags ? tags : "No Tags"}</TextStyle>
+                        </TextContainer>
                       </TextContainer>
                     </Stack.Item>
                     <Stack.Item>
@@ -205,7 +216,9 @@ class Index extends React.Component {
                           redirectToProduct();
                         }}
                       >
-                        Edit product
+                        <Stack>
+                          <TextStyle>Edit Product</TextStyle>
+                        </Stack>
                       </Button>
                     </Stack.Item>
                   </Stack>
