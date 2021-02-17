@@ -67,11 +67,11 @@ class Index extends React.Component {
 
       const handleSubProductChange = (val, id) => {
         console.log(val);
-        console.log(selectedInputs[id]);
-        setInputs({
-          ...selectedInputs,
-          [id]: val,
+        console.log(selectedInputs);
+        setInputs((prevState) => {
+          return { ...prevState, [id]: val };
         });
+        console.log(selectedInputs);
       };
 
       const handleButton = () => {
@@ -81,9 +81,8 @@ class Index extends React.Component {
           input: selectedType,
           label: selectedLabel,
         };
-        setInputs({
-          ...selectedInputs,
-          [newInput.id]: newInput,
+        setInputs((prevState) => {
+          return { ...prevState, [newInput.id]: newInput };
         });
       };
       if (store.get("item")) {
@@ -95,42 +94,45 @@ class Index extends React.Component {
               content: "Save",
             }}
           >
-            <Layout>
-              <Layout.AnnotatedSection
-                title="Products Tags"
-                description={tags ? tags : "No Tags"}
-              >
-                <Card sectioned>
-                  <Card.Section>
-                    <TextField
-                      label="Name of custom field"
-                      onChange={handleChange}
-                      value={selectedLabel}
+            <Card>
+              <Card.Section>
+                <TextField
+                  label="Name of custom field"
+                  onChange={handleChange}
+                  value={selectedLabel}
+                />
+                <Select
+                  label="Add Field"
+                  helpText="* limit of 5 additional fields"
+                  options={options}
+                  onChange={handleSelectChange}
+                  value={selectedType}
+                  id="add-inputs"
+                />
+                <Button onClick={handleButton}>
+                  Add custom {selectedType}
+                </Button>
+              </Card.Section>
+
+              {Object.keys(selectedInputs).map((val, key) => {
+                return (
+                  <Card.Section
+                    key={key}
+                    title={`Custom ${selectedInputs[val].input}`}
+                    actions={[
+                      { content: "Delete", destructive: true },
+                      { content: "Edit" },
+                    ]}
+                  >
+                    <InputForm
+                      key={key}
+                      subProductValues={selectedInputs[val]}
+                      handleSubProductChange={handleSubProductChange}
                     />
-                    <Select
-                      label="Add Field"
-                      helpText="* limit of 5 additional fields"
-                      options={options}
-                      onChange={handleSelectChange}
-                      value={selectedType}
-                      id="add-inputs"
-                    />
-                    <Button onClick={handleButton}>
-                      Add custom {selectedType}
-                    </Button>
                   </Card.Section>
-                  {Object.keys(selectedInputs).map((val, key) => {
-                    return (
-                      <InputForm
-                        key={key}
-                        subProductValues={selectedInputs[val]}
-                        handleSubProductChange={handleSubProductChange}
-                      />
-                    );
-                  })}
-                </Card>
-              </Layout.AnnotatedSection>
-            </Layout>
+                );
+              })}
+            </Card>
           </Page>
         );
       } else {

@@ -1,11 +1,12 @@
 import {
   TextField,
-  Card,
+  Checkbox,
   ChoiceList,
   Select,
-  Frame,
+  Subheading,
   TextStyle,
-  FormLayout,
+  Stack,
+  Layout,
 } from "@shopify/polaris";
 import React, { useState, useCallback, useEffect } from "react";
 
@@ -15,6 +16,12 @@ export default function InputForm(props) {
 
   const [selected, setSelected] = useState("hidden");
   const handleSelectChange = useCallback((value) => setSelected(value), []);
+
+  const [hideLabel, setHideLabel] = useState(true);
+  const handleHideLabel = useCallback(
+    (newChecked) => setHideLabel(newChecked),
+    []
+  );
 
   const [choiceList, setChoiceList] = useState(["hidden"]);
 
@@ -36,7 +43,7 @@ export default function InputForm(props) {
   };
 
   const Preview = () => {
-    const { value } = data;
+    const { value, label } = data;
     const optionList = [];
     const options = value.split("\n");
 
@@ -51,7 +58,7 @@ export default function InputForm(props) {
     if (data.input === "select" && optionList !== "") {
       return (
         <Select
-          label="Preview"
+          label={hideLabel ? "" : label}
           options={optionList}
           onChange={handleSelectChange}
           value={selected}
@@ -62,7 +69,8 @@ export default function InputForm(props) {
     if (data.input === "checkbox" && optionList !== "") {
       return (
         <ChoiceList
-          title="Company name"
+          title="Cuatom Options"
+          label={label}
           choices={optionList}
           selected={choiceList}
           onChange={handleChoiceList}
@@ -75,14 +83,22 @@ export default function InputForm(props) {
   };
 
   return (
-    <Card.Section>
-      <TextField
-        label={`${data.label} options`}
-        onChange={handleChange}
-        value={data.value}
-        multiline
-      />
-      <Preview />
-    </Card.Section>
+    <Stack distribution="fill">
+      <Layout.Section>
+        <Subheading>{`${data.label} options`}</Subheading>
+        <TextField onChange={handleChange} value={data.value} multiline />
+        {data.input === "select" ? (
+          <Checkbox
+            label="Hide Label"
+            checked={hideLabel}
+            onChange={handleHideLabel}
+          />
+        ) : undefined}
+      </Layout.Section>
+      <Layout.Section secondary>
+        <Subheading>Preview</Subheading>
+        <Preview />
+      </Layout.Section>
+    </Stack>
   );
 }

@@ -18,7 +18,7 @@ import { Redirect } from "@shopify/app-bridge/actions";
 import axios from "axios";
 import store from "store-js";
 
-const HOST = "https://a4c37fd0c249.ngrok.io";
+const HOST = "https://4943b50934ce.ngrok.io";
 
 class Index extends React.Component {
   static contextType = Context;
@@ -35,9 +35,12 @@ class Index extends React.Component {
       return parseGid(selections.id);
     });
 
-    let previousSelected = this.state.listOfProducts.map((list) => {
-      return list.id.toString();
-    });
+    console.log(this.state.listOfProducts.length);
+    let previousSelected = this.state.listOfProducts.length
+      ? this.state.listOfProducts.map((list) => {
+          return list.id.toString();
+        })
+      : null;
 
     const areEqual = (first, second) => {
       if (first.length !== second.length) {
