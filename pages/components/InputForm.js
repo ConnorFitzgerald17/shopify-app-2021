@@ -22,6 +22,11 @@ export default function InputForm(props) {
     (newChecked) => setHideLabel(newChecked),
     []
   );
+  const [customTextValue, setTextValue] = useState("");
+  const handleTextChange = useCallback(
+    (newValue) => setTextValue(newValue),
+    []
+  );
 
   const [choiceList, setChoiceList] = useState(["hidden"]);
 
@@ -44,6 +49,11 @@ export default function InputForm(props) {
 
   const Preview = () => {
     const { value, label } = data;
+
+    if (value === "") {
+      return <p>No Options Provided</p>;
+    }
+
     const optionList = [];
     const options = value.split("\n");
 
@@ -79,15 +89,27 @@ export default function InputForm(props) {
         />
       );
     }
-    return <TextStyle variation="subdued">No supplier listed</TextStyle>;
+    if (data.input === "text" && optionList !== "") {
+      return (
+        <TextField
+          label={hideLabel ? "" : label}
+          onChange={handleTextChange}
+          value={customTextValue}
+        />
+      );
+    }
   };
 
   return (
-    <Stack distribution="fill">
+    <Layout>
+      <Layout.Section>
+        <Subheading>Preview</Subheading>
+        <Preview />
+      </Layout.Section>
       <Layout.Section>
         <Subheading>{`${data.label} options`}</Subheading>
         <TextField onChange={handleChange} value={data.value} multiline />
-        {data.input === "select" ? (
+        {data.input !== "checkbox" ? (
           <Checkbox
             label="Hide Label"
             checked={hideLabel}
@@ -95,10 +117,6 @@ export default function InputForm(props) {
           />
         ) : undefined}
       </Layout.Section>
-      <Layout.Section secondary>
-        <Subheading>Preview</Subheading>
-        <Preview />
-      </Layout.Section>
-    </Stack>
+    </Layout>
   );
 }
